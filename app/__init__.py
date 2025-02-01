@@ -13,8 +13,10 @@ def create_app():
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_fallback_key')
 
     # Blueprint 등록
-    from .routes import main
+    from .routes import main, data_collector_bp
     app.register_blueprint(main)
+
+    app.register_blueprint(data_collector_bp)
 
     return app
 

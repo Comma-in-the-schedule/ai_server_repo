@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from app.services.data_collector import collect_data
 
 # Blueprint 설정
 main = Blueprint('main', __name__)
@@ -17,3 +18,17 @@ def predict():
 
     return jsonify(result)
 
+# data_collector Blueprint 추가
+data_collector_bp = Blueprint("data_collector", __name__)
+
+@data_collector_bp.route("/data/collector", methods=["POST"])
+def get_collected_data():
+    data = request.get_json()
+    location = data.get("location")
+    category = data.get("category")
+
+    if not location or not category:
+        return jsonify({"code": "VF", "message": "Validation failed. Location and category are required."}), 400
+
+    response = collect_data(location, category)
+    return jsonify(response)
