@@ -1,3 +1,4 @@
 .env
-comma_schedule_env/
+venv/
 __pycache__/
+
