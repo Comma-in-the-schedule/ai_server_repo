@@ -16,10 +16,7 @@ def collect_data(location, category):
     사용자의 위치와 카테고리에 따라 네이버 지도 API를 통해 전시회/팝업스토어 데이터를 수집하는 함수.
     """
     if not NAVER_CLIENT_ID or not NAVER_CLIENT_SECRET:
-        return {
-            "code": "CONFIG_ERROR",
-            "message": "네이버 API 키가 설정되지 않았습니다."
-        }
+        return {"code": "CONFIG_ERROR", "message": "네이버 API 키가 설정되지 않았습니다."}
 
     headers = {
         "X-Naver-Client-Id": NAVER_CLIENT_ID,
@@ -37,20 +34,12 @@ def collect_data(location, category):
 
         for item in data.get("items", []):
             results.append({
-                "name": clean_html_tags(item["title"]),  # ✅ HTML 태그 제거 적용
+                "name": clean_html_tags(item["title"]),
                 "category": category,
                 "address": item["address"],
-                "link": item["link"]
+                "link": item["link"]  # Google 검색 결과에 전달될 링크 정보 포함
             })
         
-        return {
-            "code": "SU",
-            "message": "Success.",
-            "results": results
-        }
+        return results  # 리스트 형태로 반환
 
-    else:
-        return {
-            "code": "API_ERROR",
-            "message": f"네이버 지도 API 요청 실패: {response.status_code}"
-        }
+    return {"code": "API_ERROR", "message": f"네이버 지도 API 요청 실패: {response.status_code}"}

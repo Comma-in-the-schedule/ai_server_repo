@@ -1,24 +1,24 @@
 import os
 import json
 from openai import OpenAI
-from dotenv import load_dotenv
 
+# OpenAI API 키 환경 변수 로드
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
-def recommend(schedule:str, event_list:list[dict]) -> list[dict]:
+# OpenAI API 클라이언트 초기화
+client = OpenAI(api_key=openai_api_key)
+
+def recommend(schedule: str, event_list: list[dict]) -> dict:
     """
-    openAI API를 통해 적절한 여가 활동을 추천하는 함수.
+    OpenAI API를 통해 적절한 여가 활동을 추천하는 함수.
 
     Args:
-        categorys(list): 선호 카테고리
-        schedule(str): 가능한 시간
-        event_list(list): json형식의 여가 활동 목록
+        schedule (str): 사용자의 여가 가능 시간
+        event_list (list[dict]): JSON 형식의 여가 활동 목록
 
     Returns:
-        list: json형식의 추천 여가 활동 목록
+        dict: 추천된 여가 활동 (없을 경우 "title": None 반환)
     """
-    load_dotenv('config.env')
-    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'),)
-
 
     prompt = f"""
     사용자의 여가 시간과 여가 활동 목록이 주어집니다.  
@@ -43,15 +43,17 @@ def recommend(schedule:str, event_list:list[dict]) -> list[dict]:
     - 추천된 활동을 **제공된 JSON 형태 그대로 반환**합니다.  
     - 추천할 활동이 없을 경우 다음 JSON을 반환합니다:
     ```json
-    "title": None 
+    {{"title": None}}
+    ```
     """
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "당신은 json형태로 제공된 여러 여가 활동 중에서 사용자에게 가장 적합한 여가 활동을 추천하는 비서입니다."},
+            {"role": "system", "content": "당신은 JSON 형태로 제공된 여러 여가 활동 중에서 사용자에게 가장 적합한 여가 활동을 추천하는 비서입니다."},
             {"role": "user", "content": prompt}
         ],
         temperature=0.7
     )
+
     return json.loads(response.choices[0].message.content.lstrip('```json').rstrip('```'))
