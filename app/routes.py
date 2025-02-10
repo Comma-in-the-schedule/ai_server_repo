@@ -1,64 +1,57 @@
 from flask import Blueprint, jsonify, request
 from app.services.data_collector import collect_data
-from app.services.google_custom_search import get_snippet  # OpenAI API 호출이 포함됨
+from app.services.google_custom_search import get_snippet
+from app.services.openai_processor import generate_description
 from app.services.recommender import recommend
 
-# Blueprint 설정
-main = Blueprint('main', __name__)
 
-@main.route('/')
-def index():
-    return jsonify({'message': 'Welcome to the Flask AI Backend!'})
+api_bp = Blueprint('api', __name__)
 
-@main.route('/predict', methods=['POST'])
-def predict():
-    # 요청에서 데이터 가져오기
+@api_bp.route('/ai/recommendation', methods=['POST'])
+def run_main():
     data = request.get_json()
 
-    # AI 모델 호출 (예제 로직)
-    result = {"prediction": "example_output"}
-
-    return jsonify(result)
-
-# data_collector Blueprint 추가
-data_collector_bp = Blueprint("data_collector", __name__)
-
-@data_collector_bp.route("/data/collector", methods=["POST"])
-def get_collected_data():
-    data = request.get_json()
     location = data.get("location")
+    free_time = data.get("free_time")
     category = data.get("category")
 
-    if not location or not category:
-        return jsonify({"code": "VF", "message": "Validation failed. Location and category are required."}), 400
+    if not location or not free_time or not category:
+        return jsonify({"code": "VF", "message": "Validation failed. Location, free_time and category are required."}), 400
 
     # 네이버 API에서 기본 데이터 수집
     collected_data = collect_data(location, category)
 
-    enriched_results = []
+    if isinstance(collected_data, dict):
+        return jsonify({"code": "SE", "message": "시스템 에러. 관리자에게 문의하세요."}), 400
 
+    event_list = []
     for item in collected_data:  # collected_data는 리스트여야 함
-        description_data = get_snippet(
-            category=item["category"],
-            name=item["name"],
-            address=item["address"],
-            link=item["link"]  # 원래의 링크 전달
+        category = item["category"]
+        title = item["title"]
+        address = item["address"]
+        url = item["link"]
+
+        snippets = get_snippet(
+            category=category,
+            title=title,
+            place='',
         )
-        enriched_results.append(description_data)
 
-    return jsonify({"code": "SU", "message": "Success.", "results": enriched_results})
+        full_data = generate_description(
+            category=category, 
+            title=title, 
+            place='', 
+            address=address, 
+            period='', 
+            opening_time='', 
+            url=url, 
+            snippets=snippets)
+        
+        event_list.append(full_data)
 
-# Blueprint 추가
-recommendation_bp = Blueprint("recommendation", __name__)
+    recommendation = recommend(free_time, event_list)
 
-@recommendation_bp.route("/recommend", methods=["POST"])
-def get_recommendation():
-    data = request.get_json()
-    schedule = data.get("schedule")
-    event_list = data.get("event_list")
+    if recommendation['title'] == "None":
+        return jsonify({"code": "NOT FOUND", "message": "No data available for the given criteria."})
 
-    if not schedule or not event_list:
-        return jsonify({"code": "VF", "message": "Validation failed. Schedule and event_list are required."}), 400
-
-    recommendation = recommend(schedule, event_list)
     return jsonify({"code": "SU", "message": "Success.", "result": recommendation})
