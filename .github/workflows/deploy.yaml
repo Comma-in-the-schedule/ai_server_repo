@@ -52,5 +52,14 @@ jobs:
             docker stop comma-ai || true
             docker rm comma-ai || true
             docker pull ${{ secrets.DOCKER_USERNAME }}/comma-ai:latest
-            docker run -d --name comma-ai -p 5000:5000 ${{ secrets.DOCKER_USERNAME }}/comma-ai:latest
+            docker run -d --name comma-ai -p 5000:5000 \
+              -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+              -e GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }} \
+              -e GOOGLE_SEARCH_ENGINE_ID=${{ secrets.GOOGLE_SEARCH_ENGINE_ID }} \
+              -e NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }} \
+              -e NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }} \
+              -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
+            
+            ${{ secrets.DOCKER_USERNAME }}/comma-ai:latest
+        
             docker image prune -a -f
