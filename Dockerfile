@@ -1,6 +1,6 @@
 FROM python:3.9-slim
 
-WORKDIR /
+# WORKDIR /
 
 COPY requirements.txt .
 
@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["python", "app/run.py"]
+CMD ["python", "run.py"]
