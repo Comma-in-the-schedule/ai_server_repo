@@ -4,7 +4,7 @@ import os
 
 def create_app():
     # .env 파일 로드
-    load_dotenv('config.env')
+    load_dotenv()
 
     # Flask 애플리케이션 생성
     app = Flask(__name__)
