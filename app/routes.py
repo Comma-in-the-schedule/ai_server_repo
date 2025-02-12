@@ -38,7 +38,7 @@ def run_main():
         )
 
         if snippets["code"] != "SU":
-            return jsonify({"code": "SE", "message": f"system_error: G-{snippets["code"]}"}), 400
+            return jsonify({"code": "SE", "message": f"system_error: G-{snippets['code']}"}), 400
         
         full_data = generate_description(
             category=category, 
