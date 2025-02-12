@@ -32,7 +32,10 @@ def get_snippet(category: str, title: str, place: str) -> dict:
     response = requests.get(url)
 
     if response.status_code == 200:
-        return [item['snippet'] for item in response.json().get('items', []) if 'snippet' in item]
+        return {
+        "code": "SU",
+        "message": [item['snippet'] for item in response.json().get('items', []) if 'snippet' in item]
+    }
     
     return {
         "code": "API_ERROR",
