@@ -1,8 +1,7 @@
 import os
 import requests
 
-import dotenv
-dotenv.load_dotenv('config.env')
+
 Google_SEARCH_ENGINE_ID = os.getenv('Google_SEARCH_ENGINE_ID')
 Google_API_KEY = os.getenv('Google_API_KEY')
 

@@ -3,8 +3,6 @@ import os
 import re
 
 # 환경 변수에서 네이버 API 키 불러오기
-import dotenv
-dotenv.load_dotenv('config.env')
 NAVER_CLIENT_ID = os.getenv("NAVER_CLIENT_ID")
 NAVER_CLIENT_SECRET = os.getenv("NAVER_CLIENT_SECRET")
 
