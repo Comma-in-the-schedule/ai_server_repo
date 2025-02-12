@@ -3,6 +3,8 @@ import json
 from openai import OpenAI
 
 openai_api_key = os.getenv("OPENAI_API_KEY")
+print(f"OPENAI_API_KEY: {openai_api_key}")
+
 
 # OpenAI API 클라이언트 초기화
 client = OpenAI(api_key=openai_api_key)
