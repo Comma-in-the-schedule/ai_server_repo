@@ -22,7 +22,7 @@ def get_snippet(category: str, title: str, place: str) -> dict:
     Returns:
         dict: OpenAI API에서 생성된 설명을 포함한 JSON 데이터
     """
-    if not Google_SEARCH_ENGINE_ID or not Google_API_KEY:
+    if not GOOGLE_SEARCH_ENGINE_ID or not GOOGLE_API_KEY:
         return {
             "code": "CONFIG_ERROR",
             "message": "Google Custom Search API 키가 설정되지 않았습니다."
@@ -30,7 +30,7 @@ def get_snippet(category: str, title: str, place: str) -> dict:
     
     # 검색어 설정
     query = title if category == "팝업스토어" else f"{place} {title}"
-    url = f"https://www.googleapis.com/customsearch/v1?key={Google_API_KEY}&cx={Google_SEARCH_ENGINE_ID}&q={query}&start=1"
+    url = f"https://www.googleapis.com/customsearch/v1?key={GOOGLE_API_KEY}&cx={GOOGLE_SEARCH_ENGINE_ID}&q={query}&start=1"
 
     response = requests.get(url)
 
