@@ -22,7 +22,7 @@ def run_main():
     collected_data = collect_data(location, category)
 
     if collected_data["code"] != "SU":
-        return jsonify({"code": "SE", "message": f"system_error: N-{collected_data["code"]}"}), 400
+        return jsonify({"code": "SE", "message": f"system_error: N-{collected_data['code']}"}), 400
 
     event_list = []
     for item in collected_data["message"]:  # collected_data는 리스트여야 함
