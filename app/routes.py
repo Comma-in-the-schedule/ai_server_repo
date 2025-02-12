@@ -21,11 +21,11 @@ def run_main():
     # 네이버 API에서 기본 데이터 수집
     collected_data = collect_data(location, category)
 
-    if isinstance(collected_data, dict):
-        return jsonify({"code": "SE", "message": "시스템 에러. 관리자에게 문의하세요."}), 400
+    if collected_data["code"] != "SU":
+        return jsonify({"code": "SE", "message": f"system_error: N-{collected_data["code"]}"}), 400
 
     event_list = []
-    for item in collected_data:  # collected_data는 리스트여야 함
+    for item in collected_data["message"]:  # collected_data는 리스트여야 함
         category = item["category"]
         title = item["title"]
         address = item["address"]
@@ -37,6 +37,9 @@ def run_main():
             place='',
         )
 
+        if snippets["code"] != "SU":
+            return jsonify({"code": "SE", "message": f"system_error: G-{snippets["code"]}"}), 400
+        
         full_data = generate_description(
             category=category, 
             title=title, 
@@ -45,13 +48,13 @@ def run_main():
             period='', 
             opening_time='', 
             url=url, 
-            snippets=snippets)
+            snippets=snippets["message"])
         
         event_list.append(full_data)
-
+    
     recommendation = recommend(free_time, event_list)
 
     if recommendation['title'] == "None":
-        return jsonify({"code": "NOT FOUND", "message": "No data available for the given criteria."})
+        return jsonify({"code": "NF", "message": "No data found for the given criteria."})
 
     return jsonify({"code": "SU", "message": "Success.", "result": recommendation})

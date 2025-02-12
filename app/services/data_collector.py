@@ -42,6 +42,6 @@ def collect_data(location, category):
                 "link": item["link"]  # Google 검색 결과에 전달될 링크 정보 포함
             })
         
-        return results  # 리스트 형태로 반환
+        return {"code": "SU", "message": results}
 
     return {"code": "API_ERROR", "message": f"네이버 지도 API 요청 실패: {response.status_code}"}
