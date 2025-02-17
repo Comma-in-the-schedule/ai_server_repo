@@ -1,13 +1,9 @@
 import os
 import requests
 
-import dotenv
-dotenv.load_dotenv('config.env')
+# 환경 변수에서 구글 커스텀 서치 API 키 불러오기
 GOOGLE_SEARCH_ENGINE_ID = os.getenv('GOOGLE_SEARCH_ENGINE_ID')
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
-print(f"Google_SEARCH_ENGINE_ID: {GOOGLE_SEARCH_ENGINE_ID}")
-print(f"Google_API_KEY: {GOOGLE_API_KEY}")
-
 
 def get_snippet(category: str, title: str, place: str) -> dict:
     """
@@ -23,8 +19,6 @@ def get_snippet(category: str, title: str, place: str) -> dict:
         dict: OpenAI API에서 생성된 설명을 포함한 JSON 데이터
     """
     if not GOOGLE_SEARCH_ENGINE_ID or not GOOGLE_API_KEY:
-        print("test1")
-
         return {
             "code": "CONFIG_ERROR",
             "message": "Google Custom Search API 키가 설정되지 않았습니다."
@@ -37,14 +31,11 @@ def get_snippet(category: str, title: str, place: str) -> dict:
     response = requests.get(url)
 
     if response.status_code == 200:
-        print("test2")
-
         return {
         "code": "SU",
         "message": [item['snippet'] for item in response.json().get('items', []) if 'snippet' in item]
     }
     
-    print("test3")
 
     return {
         "code": "API_ERROR",
