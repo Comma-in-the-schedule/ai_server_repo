@@ -13,13 +13,19 @@ def run_main():
 
     location = data.get("location")
     free_time = data.get("free_time")
-    category = data.get("category")
+    category_num = data.get("category")
 
-    if not location or not free_time or not category:
+    if not location or not free_time or not category_num:
         return jsonify({"code": "VF", "message": "Validation failed. Location, free_time and category are required."}), 400
+    
+    category_list = {1: "팝업스토어", 2: "전시회", 3: "영화", 4: "공방"}
+    category = category_list[category_num]
 
     # 네이버 API에서 기본 데이터 수집
-    collected_data = collect_data(location, category)
+    if category == "팝업스토어":
+        collected_data = collect_data(location, category)
+    elif category == "전시회":
+        pass
 
     if collected_data["code"] != "SU":
         return jsonify({"code": "SE1", "message": f"system_error: N-{collected_data['code']}"}), 400
@@ -54,7 +60,7 @@ def run_main():
     
     recommendation = recommend(free_time, event_list)
 
-    if recommendation['title'] == "None":
+    if recommendation[0]['title'] == "None":
         return jsonify({"code": "NF", "message": "No data found for the given criteria."})
 
     return jsonify({"code": "SU", "message": "Success.", "result": recommendation})

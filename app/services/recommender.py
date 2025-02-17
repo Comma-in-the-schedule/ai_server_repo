@@ -44,9 +44,9 @@ def recommend(free_time: str, event_list: list[dict]) -> dict:
     # 수정된 프롬프트: 날짜 처리 함수에 맞게 수정. free_time이 반드시 이벤트의 운영 기간에 포함되어야 한다는 조건을 명시합니다.
     prompt = f"""
     사용자의 여가 시간과 여가 활동 목록이 주어집니다.
-    다음 조건을 반드시 만족하는 이벤트를 하나 추천하세요:
+    다음 조건을 반드시 만족하는 이벤트를 **가능한 많이** 추천하세요:
     1. **추천된 이벤트의 운영 기간(period)은 반드시 사용자 여가 시간(free_time)인 "{free_time.split("T")[0]}"을 포함해야 합니다.**
-    2. 운영 기간이 종료된 이벤트는 제외합니다.
+    2. **운영 기간이 종료된 이벤트는 제외합니다.**
     3. 운영 시간(opening_time)이 free_time과 겹치는 경우 우선 추천합니다.
     4. 이벤트 목록은 반드시 제공된 JSON 형태의 목록에 있는 이벤트여야 합니다.
     5. 여가 활동과 관련 없는 이벤트(예: "서비스센터", "고객센터" 등)는 추천하지 않습니다.
@@ -56,8 +56,7 @@ def recommend(free_time: str, event_list: list[dict]) -> dict:
     - 사용자 여가 시간: "{free_time}"
     - 여가 활동 목록: {event_list}  (각 이벤트는 period 및 opening_time 포함)
 
-    #### 출력 (반드시 JSON 형태로 응답):
-    {{
+    #### 출력 (list 내부에 아래와 같은 JSON형식 데이터가 포함되어야함):
         "category": "<카테고리>",
         "title": "<제목>",
         "description": "<설명>",
@@ -66,11 +65,9 @@ def recommend(free_time: str, event_list: list[dict]) -> dict:
         "period": "<기간>",
         "opening_time": "<운영시간>",
         "url": "<링크>"
-    }}
 
-    만약 free_time을 포함하는 이벤트가 없다면, 반드시 다음과 같이 반환하세요:
-    ```json
-    {{ "title": "None" }}
+    만약 free_time을 포함하는 이벤트가 없다면, 반드시 다음과 같이 반환하세요(list 내부에 JSON형식 데이터가 포함된 형태):
+        "title": "None"
     """
 
     response = client.chat.completions.create(
