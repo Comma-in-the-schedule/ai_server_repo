@@ -31,8 +31,7 @@ def process_popupstore(location, free_time):
         )
 
         if snippets["code"] != "SU":
-            # return {"code": "SE", "message": f"system_error: G-{snippets['code']}"}
-            return snippets
+            return {"code": "SE", "message": f"system_error: G-{snippets['code']}"}
         
         full_data = generate_description(
             category=category, 
