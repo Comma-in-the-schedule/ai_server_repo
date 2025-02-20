@@ -50,7 +50,30 @@ def process_popupstore(location, free_time):
 
 def process_exhibition(location, free_time):
     # 테스트를 위한 임시 더미데이터
-    pass
+    event_list = [
+        {
+            "category": "전시회",
+            "title": "데미데이터1",
+            "description": "더미데이터1입니다.",
+            "place": "장소1",
+            "address": "서울특별시 강남구 ㅇㅇ로 ㅇㅇ길",
+            "period": "2025.01.01.-2025.12.31.",
+            "opening_time": "10:00-21:00",
+            "url": "https://www.example1.com/"
+        },
+        {
+            "category": "전시회",
+            "title": "데미데이터2",
+            "description": "더미데이터2입니다.",
+            "place": "장소2",
+            "address": "서울특별시 강남구 ㅁㅁ로 ㅁㅁ길",
+            "period": "2025.01.10.-2025.12.13.",
+            "opening_time": "09:00-19:00",
+            "url": "https://www.example2.com/"
+        }
+    ]
+
+    return {"code": "SU", "message": "Success.", "result": event_list}
 
 api_bp = Blueprint('api', __name__)
 
@@ -75,7 +98,7 @@ def run_main():
         # 네이버 API에서 기본 데이터 수집
         if category == 1:
             result_list[0] = process_popupstore(location, free_time)["result"]
-        # elif category == 2:
-        #     result_list[1] = process_exhibition(location, free_time)["result"]
+        elif category == 2:
+            result_list[1] = process_exhibition(location, free_time)["result"]
 
     return jsonify({"code": "SU", "message": "Success.", "result": result_list})
