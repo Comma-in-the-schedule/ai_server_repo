@@ -36,7 +36,7 @@ def get_snippet(category: str, title: str, place: str) -> dict:
         "message": [item['snippet'] for item in response.json().get('items', []) if 'snippet' in item]
     }
     
-
+    print(response)
     return {
         "code": "API_ERROR",
         "message": f"Google Custom Search API 요청 실패: {response.status_code}"
