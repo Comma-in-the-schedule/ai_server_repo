@@ -9,7 +9,8 @@ def process_popupstore(location, free_time):
     result = collect_data(location, "팝업스토어")
 
     if result["code"] != "SU":
-        return {"code": "SE", "message": f"system_error: N-{result['code']}"}
+        # return {"code": "SE", "message": f"system_error: N-{result['code']}"}
+        return result
     
     elif not result["message"]:
         return {"code": "NF", "message": "No data found for the given criteria."}
