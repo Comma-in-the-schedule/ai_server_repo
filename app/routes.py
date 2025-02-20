@@ -58,7 +58,7 @@ def process_exhibition(location, free_time):
             "place": "장소1",
             "address": "서울특별시 강남구 ㅇㅇ로 ㅇㅇ길",
             "period": "2025.01.01.-2025.12.31.",
-            "opening_time": "10:00-22:00",
+            "opening_time": "10:00-21:00",
             "url": "https://www.example1.com/"
         },
         {
