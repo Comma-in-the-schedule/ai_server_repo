@@ -40,4 +40,5 @@ def get_snippet(category: str, title: str, place: str) -> dict:
     #    "code": "API_ERROR",
     #    "message": f"Google Custom Search API 요청 실패: {response.status_code}"
     #}
-    return {"code": "API_ERROR", "message": response} 
+
+    return {"code": "API_ERROR", "message": response.text}
