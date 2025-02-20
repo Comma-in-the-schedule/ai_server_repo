@@ -9,8 +9,7 @@ def process_popupstore(location, free_time):
     result = collect_data(location, "팝업스토어")
 
     if result["code"] != "SU":
-        # return {"code": "SE", "message": f"system_error: N-{result['code']}"}
-        return result
+        return {"code": "SE", "message": f"system_error: N-{result['code']}"}
     
     elif not result["message"]:
         return {"code": "NF", "message": "No data found for the given criteria."}
@@ -32,7 +31,8 @@ def process_popupstore(location, free_time):
         )
 
         if snippets["code"] != "SU":
-            return {"code": "SE", "message": f"system_error: G-{snippets['code']}"}
+            # return {"code": "SE", "message": f"system_error: G-{snippets['code']}"}
+            return snippets
         
         full_data = generate_description(
             category=category, 
