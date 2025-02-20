@@ -101,7 +101,7 @@ def run_main():
             if result["code"] == "SU":
                 result_list[0] = result["result"]
             else:
-                return jsonify({"code": "error"})
+                return jsonify(result)
         elif category == 2:
             result_list[1] = process_exhibition(location, free_time)["result"]
 
