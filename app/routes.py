@@ -5,7 +5,7 @@ from app.services.description_generator import generate_description
 from app.services.period_processor import is_free_time_in_period
 from app.services.recommender import recommend
 
-#test
+#test CI/CD
 def process_popupstore(location, free_time):
     result = collect_data(location, "팝업스토어")
 
