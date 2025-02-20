@@ -9,7 +9,8 @@ def process_popupstore(location, free_time):
     result = collect_data(location, "팝업스토어")
 
     if result["code"] != "SU":
-        return {"code": "SE", "message": f"system_error: N-{result['code']}"}
+        # return {"code": "SE", "message": f"system_error: N-{result['code']}"}
+        return result
     
     elif not result["message"]:
         return {"code": "NF", "message": "No data found for the given criteria."}
@@ -98,7 +99,7 @@ def run_main():
         # 네이버 API에서 기본 데이터 수집
         if category == 1:
             result = process_popupstore(location, free_time)
-            if result["code"] == "SU": 
+            if result["code"] == "SU":
                 result_list[0] = result["result"]
             else:
                 return jsonify(result)
