@@ -98,10 +98,10 @@ def run_main():
         # 네이버 API에서 기본 데이터 수집
         if category == 1:
             result = process_popupstore(location, free_time)
-            if result["code"] == "SU":
+            if result["code"] == "SU": 
                 result_list[0] = result["result"]
             else:
-                return jsonify({"code": "error"})
+                return jsonify(result)
         elif category == 2:
             result_list[1] = process_exhibition(location, free_time)["result"]
 
