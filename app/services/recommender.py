@@ -1,12 +1,33 @@
 import os
 import json
 from openai import OpenAI
+from datetime import datetime
 
 # OpenAI API 키 환경 변수 로드
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
 # OpenAI API 클라이언트 초기화
 client = OpenAI(api_key=openai_api_key)
+
+def is_free_time_in_period(free_time: str, period: str) -> bool:
+    """
+    free_time은 ISO 형식의 날짜 (예: "2025-02-15" 또는 "2025-02-15T10:00:00")라고 가정하고,
+    period는 "YYYY.MM.DD-YYYY.MM.DD" 형식으로 주어진다고 가정합니다.
+    free_time이 period 내에 포함되면 True를 반환합니다.
+    """
+    try:
+        # free_time에서 날짜 부분만 추출 (시간 정보는 무시)
+        free_date = datetime.fromisoformat(free_time.split("T")[0])
+        
+        # period를 시작일과 종료일로 분리하여 파싱
+        start_str, end_str = period.split("-")
+        start_date = datetime.strptime(start_str.strip(), "%Y.%m.%d")
+        end_date = datetime.strptime(end_str.strip(), "%Y.%m.%d")
+        
+        return start_date <= free_date <= end_date
+    except Exception:
+        # period 형식이 올바르지 않으면 False 반환
+        return False
 
 def recommend(free_time: str, event_list: list[dict]) -> dict:
     """
