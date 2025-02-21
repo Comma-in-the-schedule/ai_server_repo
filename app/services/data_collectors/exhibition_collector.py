@@ -1,7 +1,6 @@
 import requests
 import xmltodict
 import os
-from datetime import datetime
 from app.services.snippets_collector import get_snippet
 from app.services.description_generator import generate_description
 
@@ -59,39 +58,6 @@ def fetch_exhibition_data(location, free_time):
     if not items or "item" not in items:  
         return {"code": "NF", "message": "No exhibition data found."}
 
-    item_list = items["item"] if isinstance(items["item"], list) else [items["item"]]  
+    results = items["item"] if isinstance(items["item"], list) else [items["item"]]
 
-    result_list = []
-    for item in item_list:
-        title = item.get("title", "알 수 없음")
-        place = item.get("place", "알 수 없음")
-        address = item.get("area", "알 수 없음")
-        period = f"{item.get('startDate', '미정')} - {item.get('endDate', '미정')}"
-        thumbnail = item.get("thumbnail", "")
-
-        # Snippets 가져오기
-        snippets = get_snippet(category="전시회", title=title, place=place)
-        snippet_texts = snippets["message"] if snippets["code"] == "SU" else []
-
-        # OpenAI API를 이용해 description 생성
-        full_data = generate_description(
-            category="전시회",
-            title=title,
-            place=place,
-            address=address,
-            period=period,
-            opening_time="",
-            url="",
-            snippets=snippet_texts
-        )
-
-        result_list.append({
-            "title": title,
-            "description": full_data["description"],
-            "place": place,
-            "address": address,
-            "period": period,
-            "thumbnail": thumbnail
-        })
-
-    return {"code": "SU", "message": "Success.", "result": result_list}
+    return {"code": "SU", "message": results}
