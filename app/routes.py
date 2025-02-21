@@ -4,6 +4,7 @@ from app.services.snippets_collector import get_snippet
 from app.services.description_generator import generate_description
 from app.services.period_processor import is_free_time_in_period
 from app.services.recommender import recommend
+from app.services.data_collectors.exhibition_collector import fetch_exhibition_data
 
 #test CI/CD
 def process_popupstore(location, free_time):
@@ -51,7 +52,7 @@ def process_popupstore(location, free_time):
             event_list.append(full_data)
 
     return {"code": "SU", "message": "Success.", "result": event_list}
-
+'''
 def process_exhibition(location, free_time):
     # 테스트를 위한 임시 더미데이터
     event_list = [
@@ -78,6 +79,19 @@ def process_exhibition(location, free_time):
     ]
 
     return {"code": "SU", "message": "Success.", "result": event_list}
+'''
+# api 적용한 전시회
+def process_exhibition(location, free_time):
+    """
+    사용자의 지역(location)과 여가 시간(free_time)에 맞는 전시회 데이터를 가져와 가공하는 함수.
+    """
+    collected_data = fetch_exhibition_data(location=location, free_time=free_time)
+
+    if collected_data["code"] != "SU":
+        return {"code": "NF", "message": "No exhibition data found for the given criteria."}
+
+    return {"code": "SU", "message": "Success.", "result": collected_data["result"]}
+
 
 api_bp = Blueprint('api', __name__)
 
@@ -107,6 +121,14 @@ def run_main():
             else:
                 return result
         elif category == 2:
+            '''
             result_list[1] = process_exhibition(location, free_time)["result"]
+            '''
+            # api 적용한 전시회
+            result = process_exhibition(location, free_time)
+            if result["code"] == "SU":
+                result_list[1] = result["result"]
+            else:
+                return result
 
     return jsonify({"code": "SU", "message": "Success.", "result": result_list})
