@@ -61,6 +61,7 @@ def process_exhibition(location, free_time):
     """
     사용자의 지역(location)과 여가 시간(free_time)에 맞는 전시회 데이터를 가져와 가공하는 함수.
     """
+    """
     result = fetch_exhibition_data(location, free_time)
 
     if result["code"] != "SU":
@@ -95,6 +96,20 @@ def process_exhibition(location, free_time):
         full_data["image"] = image
 
         event_list.append(full_data)
+    """
+    event_list = """
+    {
+    "address": "서울특별시 강남구 OO로",
+    "category": "전시회",
+    "description": "더미 데이터 설명",
+    "image": "",
+    "opening_time": "00:00 - 00:00",
+    "period": "0000.00.00.-0000.00.00.",
+    "place": "장소",
+    "title": "더미데이터입니다.",
+    "url": "http://www.example.co.kr/"
+    }
+    """
 
     return {"code": "SU", "message": "Success.", "result": event_list}
 
