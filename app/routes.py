@@ -31,11 +31,9 @@ def process_popupstore(location, free_time):
             title=title,
             place='',
         )
-        print(snippets["message"])
 
         if snippets["code"] != "SU":
-            # return {"code": "SE", "message": f"system_error: G-{snippets['code']}"}
-            return snippets
+            return {"code": "SE", "message": f"system_error: G-{snippets['code']}"}
         
         full_data = generate_description(
             category=category, 
@@ -47,7 +45,6 @@ def process_popupstore(location, free_time):
             url=url, 
             snippets=snippets["message"])
 
-        print(full_data)
         if is_free_time_in_period(free_time, full_data['period']) or not full_data['period']:  # 운영 기간이 여가 시간에 포함될 경우, 운영 기간 데이터가 없을 경우에만 추가
             event_list.append(full_data)
 
@@ -129,6 +126,6 @@ def run_main():
             if result["code"] == "SU":
                 result_list[1] = result["result"]
             else:
-                return result
+                return jsonify(result)
 
     return jsonify({"code": "SU", "message": "Success.", "result": result_list})
