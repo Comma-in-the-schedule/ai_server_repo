@@ -12,7 +12,7 @@ def process_popupstore(location, free_time):
     result = collect_data(location, "팝업스토어")
 
     if result["code"] != "SU":
-        return {"code": "SE", "message": f"system_error: N-{result['code']}"}
+        return {"code": "SE1", "message": f"system_error: N-{result['code']}"}
     
     elif not result["message"]:
         return {"code": "NF", "message": "No data found for the given criteria."}
@@ -34,7 +34,7 @@ def process_popupstore(location, free_time):
         )
 
         if snippets["code"] != "SU":
-            return {"code": "SE", "message": f"system_error: G-{snippets['code']}"}
+            return {"code": "SE1", "message": f"system_error: G-{snippets['code']}"}
         
         full_data = generate_description(
             category=category, 
@@ -45,7 +45,9 @@ def process_popupstore(location, free_time):
             opening_time='', 
             url=url, 
             snippets=snippets["message"])
-        
+
+        if full_data["period"]:
+            full_data["period"] = convert_to_period_format(full_data["period"].split('-')[0], full_data["period"].split('-')[1])
         # 이미지 url 추가(추후 기능 구현)
         full_data["image"] = ""
 
@@ -61,7 +63,6 @@ def process_exhibition(location, free_time):
     """
     사용자의 지역(location)과 여가 시간(free_time)에 맞는 전시회 데이터를 가져와 가공하는 함수.
     """
-
     # result = fetch_exhibition_data(location, free_time)
 
     # if result["code"] != "SU":
@@ -74,12 +75,13 @@ def process_exhibition(location, free_time):
     #     title = item.get("title", "알 수 없음")
     #     place = item.get("place", "알 수 없음")
     #     address = item.get("area", "알 수 없음")
-    #     period = convert_to_period_format(item.get('startDate', '미정'), {item.get('endDate', '미정')})
+    #     period = convert_to_period_format(item.get('startDate', '미정'), item.get('endDate', '미정'))
     #     image = item.get("thumbnail", "")
 
-    #     # Snippets 가져오기
+    #     # snippet 가져오기
     #     snippets = get_snippet(category="전시회", title=title, place=place)
-    #     snippet_texts = snippets["message"] if snippets["code"] == "SU" else []
+    #     if snippets["code"] != "SU":
+    #         return {"code": "SE2", "message": f"system_error: G-{snippets['code']}"}
 
     #     # OpenAI API를 이용해 description 생성
     #     full_data = generate_description(
@@ -90,7 +92,7 @@ def process_exhibition(location, free_time):
     #         period=period,
     #         opening_time="",
     #         url="",
-    #         snippets=snippet_texts
+    #         snippets=snippets["message"]
     #     )
     #     # image url을 추가
     #     full_data["image"] = image
