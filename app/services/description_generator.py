@@ -37,7 +37,8 @@ def generate_description(category:str, title:str, place:str, address:str, period
         - 신뢰 가능한 데이터가 부족할 경우 snippet 간 교차 검증을 수행하세요.  
     2) 신뢰 가능한 정보 중 공백인 항목이 있다면, snippet에서 해당 정보를 찾아 알맞은 필드에 입력하세요. **단 설명('description')에는 해당 내용을 포함하지 마세요.**  
         - snippet에서 찾을 수 있다면 공백 대신 해당 값을 사용하세요.  
-        - 기간('period')의 경우 YYYY.MM.DD.-YYYY.MM.DD. 형식으로 변환하여 입력하세요.
+        - 기간('period')의 경우 YYYYMMDD-YYYYMMDD 형식으로 변환하여 입력하세요.
+        - **각 snippet의 첫 부분에는 게시글 등록 날짜가 등장할 수 있습니다. 이 날짜들은 기간('period')과 무관하니 무시하세요.**
         - 운영 시간('opening_time')의 경우 HH:MM-HH:MM 형식으로 변환하여 입력하세요.
     3) 반환하기 전 설명('description')에 다른 필드의 데이터와 중복된 내용이 없는지 다시한번 확인하세요.
         - **title을 제외한 신뢰 가능한 데이터(예: 장소, 주소, 운영 시간 등)가 설명에 절대로 중복되지 않아야합니다.**
