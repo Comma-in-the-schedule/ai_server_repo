@@ -1,8 +1,6 @@
 import requests
 import xmltodict
 import os
-from app.services.snippets_collector import get_snippet
-from app.services.description_generator import generate_description
 
 API_URL = "https://apis.data.go.kr/B553457/nopenapi/rest/publicperformancedisplays/realm"
 
@@ -23,8 +21,8 @@ def fetch_exhibition_data(location, free_time):
     API_KEY = os.getenv("EXHIBITION_API_KEY", "YOUR_TEST_API_KEY")
     sido = extract_sido(location)
 
-    # 날짜 변환 (YYYY-MM-DD → YYYYMMDD)
-    formatted_date = free_time.replace("-", "")
+    # 날짜 변환 (YYYY.MM.DD. → YYYYMMDD)
+    formatted_date = free_time.replace(".", "")
 
     params = {
         "serviceKey": API_KEY,
