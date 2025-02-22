@@ -2,6 +2,9 @@ import requests
 import os
 import re
 
+import dotenv
+
+dotenv.load_dotenv('config.env')
 # 환경 변수에서 네이버 API 키 불러오기
 NAVER_CLIENT_ID = os.getenv("NAVER_CLIENT_ID")
 NAVER_CLIENT_SECRET = os.getenv("NAVER_CLIENT_SECRET")
@@ -36,10 +39,27 @@ def collect_data(location, category):
             results.append({
                 "title": clean_html_tags(item["title"]),
                 "category": category,
-                "address": item["address"],
+                "address": item["roadAddress"],
                 "link": item["link"]  # Google 검색 결과에 전달될 링크 정보 포함
             })
         
         return {"code": "SU", "message": results}
 
     return {"code": "API_ERROR", "message": f"네이버 지도 API 요청 실패: {response.status_code}"}
+
+
+def get_address(place):
+    if not NAVER_CLIENT_ID or not NAVER_CLIENT_SECRET:
+        return {"code": "CONFIG_ERROR", "message": "네이버 API 키가 설정되지 않았습니다."}
+
+    headers = {
+        "X-Naver-Client-Id": NAVER_CLIENT_ID,
+        "X-Naver-Client-Secret": NAVER_CLIENT_SECRET
+    }
+    url = f"https://openapi.naver.com/v1/search/local.json?query={place}&display=1"
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        return data.get("items")[0]["roadAddress"]
