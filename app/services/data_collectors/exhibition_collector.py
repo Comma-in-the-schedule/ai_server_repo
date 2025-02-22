@@ -1,39 +1,54 @@
 import requests
 import xmltodict
 import os
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
-API_URL = "https://apis.data.go.kr/B553457/nopenapi/rest/publicperformancedisplays/realm"
+def get_coordinates(location):
+    API_KEY = os.getenv("KAKAO_API_KEY")
+    url = "https://dapi.kakao.com/v2/local/search/address.json"
+    headers = {"Authorization": API_KEY}
+    params = {"query": location}
 
-SIDO_MAPPING = {
-    "서울": "서울",
-    "경기도": "경기"
-}
+    response = requests.get(url, headers=headers, params=params)
+    data = response.json()
+    
+    return [float(data['documents'][0]['y']), float(data['documents'][0]['x'])]
 
-def extract_sido(location):
-    """ 사용자의 입력 지역에서 시/도 정보만 추출 """
-    for key in SIDO_MAPPING:
-        if key in location:
-            return SIDO_MAPPING[key]
-    return location.split()[0]  # 기본적으로 첫 번째 단어 반환
 
-def fetch_exhibition_data(location, free_time):
+def get_start_and_end_date(free_time):
+    free_date = datetime.strptime(free_time.strip(), "%Y.%m.%d.")
+
+    prev_date = free_date + relativedelta(months=-1)
+    next_date = free_date + relativedelta(months=1)
+
+    return prev_date.strftime("%Y%m%d"), next_date.strftime("%Y%m%d")
+
+
+def fetch_exhibition_data(coordinates, free_time):
     """ 사용자의 지역과 여가 시간에 맞는 전시회 데이터를 가져오는 함수 """
+    API_URL = "https://apis.data.go.kr/B553457/nopenapi/rest/publicperformancedisplays/realm"
     API_KEY = os.getenv("EXHIBITION_API_KEY", "YOUR_TEST_API_KEY")
-    sido = extract_sido(location)
+
+    y, x = coordinates
+    y_margin = 0.07
+    x_margin = 0.08
 
     # 날짜 변환 (YYYY.MM.DD. → YYYYMMDD)
-    formatted_date = free_time.replace(".", "")
-
+    start_date, end_date = get_start_and_end_date(free_time)
     params = {
         "serviceKey": API_KEY,
         "realmCode": "D000",
-        "from": formatted_date,
-        "to": formatted_date,
-        "sido": sido,
+        "from": start_date,
+        "to": end_date,
         "pageNo": 1,
         "numOfRows": 10,
+        "gpsxfrom": x - x_margin,
+        "gpsyfrom": y - y_margin,
+        "gpsxto": x + x_margin,
+        "gpsyto": y + y_margin
     }
-
+    print(params)
     response = requests.get(API_URL, params=params)
     if response.status_code != 200:
         return {"code": "API_ERROR", "message": f"문화포털 API 요청 실패 (HTTP {response.status_code})"}
@@ -59,3 +74,5 @@ def fetch_exhibition_data(location, free_time):
     results = items["item"] if isinstance(items["item"], list) else [items["item"]]
 
     return {"code": "SU", "message": results}
+
+print(fetch_exhibition_data(get_coordinates('서울특별시 성동구'), "2025.02.21."))
