@@ -22,13 +22,13 @@ def is_free_time_in_period(free_time: str, period: str) -> bool:
     
 def convert_to_period_format(start_date:str, end_date:str) -> str:
     """
-    start_date와 end_date는 "YYMMDD"의 형식으로 주어집니다.
-    start_date와 end_date를 "YY-MM-DD"의 형식으로 변환 후 "YY-MM-DD - YY-MM-DD"으로 반환합니다.
+    start_date와 end_date는 "YYYYMMDD"의 형식으로 주어집니다.
+    start_date와 end_date를 "YYYY.MM.DD."의 형식으로 변환 후 "YYYY.MM.DD.-YYYY.MM.DD."으로 반환합니다.
     """
     if start_date != "미정":
-        formatted_start_date = f'{start_date[:4]}-{start_date[4:6]}-{start_date[6:]}'
+        formatted_start_date = f'{start_date[:4]}.{start_date[4:6]}.{start_date[6:]}.'
     
     if end_date != "미정":
-        formatted_end_date = f'{end_date[:4]}-{end_date[4:6]}-{end_date[6:]}'
+        formatted_end_date = f'{end_date[:4]}.{end_date[4:6]}.{end_date[6:]}.'
 
-    return f'{formatted_start_date} - {formatted_end_date}'
+    return f'{formatted_start_date}-{formatted_end_date}'
