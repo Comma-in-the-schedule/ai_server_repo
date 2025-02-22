@@ -1,10 +1,10 @@
 from flask import Blueprint, jsonify, request
-from app.services.data_collectors.naver_collector import collect_data
+from app.services.data_collectors.naver_collector import collect_data, get_address
 from app.services.snippets_collector import get_snippet
 from app.services.description_generator import generate_description
 from app.services.period_processor import is_free_time_in_period, convert_to_period_format
 from app.services.recommender import recommend
-from app.services.data_collectors.exhibition_collector import fetch_exhibition_data
+from app.services.data_collectors.exhibition_collector import get_coordinates, fetch_exhibition_data
 
 
 #test CI/CD
@@ -63,66 +63,70 @@ def process_exhibition(location, free_time):
     """
     사용자의 지역(location)과 여가 시간(free_time)에 맞는 전시회 데이터를 가져와 가공하는 함수.
     """
-    # result = fetch_exhibition_data(location, free_time)
+    result = fetch_exhibition_data(get_coordinates(location), free_time)
 
-    # if result["code"] != "SU":
-    #     return jsonify(result)
-    # else:
-    #     collected_data = result["message"]
+    if result["code"] != "SU":
+        return jsonify(result)
+    else:
+        collected_data = result["message"]
 
-    # event_list = []
-    # for item in collected_data:
-    #     title = item.get("title", "알 수 없음")
-    #     place = item.get("place", "알 수 없음")
-    #     address = item.get("area", "알 수 없음")
-    #     period = convert_to_period_format(item.get('startDate', '미정'), item.get('endDate', '미정'))
-    #     image = item.get("thumbnail", "")
+    event_list = []
+    for item in collected_data:
+        title = item.get("title")
+        place = item.get("place")
+        address = get_address(place)
+        period = f'{item.get('startDate')}-{item.get('endDate')}'
+        image = item.get("thumbnail", "")
 
-    #     # snippet 가져오기
-    #     snippets = get_snippet(category="전시회", title=title, place=place)
-    #     if snippets["code"] != "SU":
-    #         return {"code": "SE2", "message": f"system_error: G-{snippets['code']}"}
+        # snippet 가져오기
+        snippets = get_snippet(category="전시회", title=title, place=place)
+        if snippets["code"] != "SU":
+            return {"code": "SE2", "message": f"system_error: G-{snippets['code']}"}
 
-    #     # OpenAI API를 이용해 description 생성
-    #     full_data = generate_description(
-    #         category="전시회",
-    #         title=title,
-    #         place=place,
-    #         address=address,
-    #         period=period,
-    #         opening_time="",
-    #         url="",
-    #         snippets=snippets["message"]
-    #     )
-    #     # image url을 추가
-    #     full_data["image"] = image
+        # OpenAI API를 이용해 description 생성
+        full_data = generate_description(
+            category="전시회",
+            title=title,
+            place=place,
+            address=address,
+            period=period,
+            opening_time="",
+            url="",
+            snippets=snippets["message"]
+        )
 
-    #     event_list.append(full_data)
+        if full_data["period"]:
+            full_data["period"] = convert_to_period_format(full_data["period"].split('-')[0], full_data["period"].split('-')[1])
+            
+        # image url을 추가
+        full_data["image"] = image
 
-    event_list =[
-        {
-            "address": "서울특별시 강남구 OO로",
-            "category": "전시회",
-            "description": "더미 데이터 설명",
-            "image": "",
-            "opening_time": "00:00 - 00:00",
-            "period": "0000.00.00.-0000.00.00.",
-            "place": "장소",
-            "title": "더미데이터입니다.",
-            "url": "http://www.example.co.kr/"
-        },
-        {
-            "address": "서울특별시 종로구 OO로",
-            "category": "전시회",
-            "description": "더미 데이터 설명2",
-            "image": "",
-            "opening_time": "11:11-11:11",
-            "period": "1111.11.11-1111.11.11.",
-            "place": "장소2",
-            "title": "더미데이터입니다.2",
-            "url": "http://www.example2.co.kr/"
-        }
-    ]
+        event_list.append(full_data)
+
+    # event_list =[
+    #     {
+    #         "address": "서울특별시 강남구 OO로",
+    #         "category": "전시회",
+    #         "description": "더미 데이터 설명",
+    #         "image": "",
+    #         "opening_time": "00:00 - 00:00",
+    #         "period": "0000.00.00.-0000.00.00.",
+    #         "place": "장소",
+    #         "title": "더미데이터입니다.",
+    #         "url": "http://www.example.co.kr/"
+    #     },
+    #     {
+    #         "address": "서울특별시 종로구 OO로",
+    #         "category": "전시회",
+    #         "description": "더미 데이터 설명2",
+    #         "image": "",
+    #         "opening_time": "11:11-11:11",
+    #         "period": "1111.11.11-1111.11.11.",
+    #         "place": "장소2",
+    #         "title": "더미데이터입니다.2",
+    #         "url": "http://www.example2.co.kr/"
+    #     }
+    # ]
 
     return {"code": "SU", "message": "Success.", "result": event_list}
 
