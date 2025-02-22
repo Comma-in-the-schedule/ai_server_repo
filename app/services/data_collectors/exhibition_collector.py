@@ -21,7 +21,7 @@ def fetch_exhibition_data(location, free_time):
     API_KEY = os.getenv("EXHIBITION_API_KEY", "YOUR_TEST_API_KEY")
     sido = extract_sido(location)
 
-    # 날짜 변환 (YYYY-MM-DD → YYYYMMDD)
+    # 날짜 변환 (YYYY.MM.DD. → YYYYMMDD)
     formatted_date = free_time.replace(".", "")
 
     params = {
