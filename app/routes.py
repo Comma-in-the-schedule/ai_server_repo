@@ -7,7 +7,6 @@ from app.services.recommender import recommend
 from app.services.data_collectors.exhibition_collector import get_coordinates, fetch_exhibition_data
 
 
-#test CI/CD
 def process_popupstore(location, free_time):
     result = collect_data(location, "팝업스토어")
 
@@ -97,7 +96,7 @@ def process_exhibition(location, free_time):
 
         if full_data["period"]:
             full_data["period"] = convert_to_period_format(full_data["period"].split('-')[0], full_data["period"].split('-')[1])
-            
+
         # image url을 추가
         full_data["image"] = image
 
