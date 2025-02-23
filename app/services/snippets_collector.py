@@ -1,9 +1,11 @@
 import os
 import requests
 
+
 # 환경 변수에서 구글 커스텀 서치 API 키 불러오기
 GOOGLE_SEARCH_ENGINE_ID = os.getenv('GOOGLE_SEARCH_ENGINE_ID')
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+
 
 def get_snippet(category: str, title: str, place: str) -> dict:
     """

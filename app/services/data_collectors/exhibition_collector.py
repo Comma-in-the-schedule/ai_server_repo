@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+
 def get_coordinates(location):
     API_KEY = os.getenv("KAKAO_API_KEY")
     url = "https://dapi.kakao.com/v2/local/search/address.json"
@@ -48,7 +49,7 @@ def fetch_exhibition_data(coordinates, free_time):
         "gpsxto": x + x_margin,
         "gpsyto": y + y_margin
     }
-    print(params)
+
     response = requests.get(API_URL, params=params)
     if response.status_code != 200:
         return {"code": "API_ERROR", "message": f"문화포털 API 요청 실패 (HTTP {response.status_code})"}
@@ -74,5 +75,3 @@ def fetch_exhibition_data(coordinates, free_time):
     results = items["item"] if isinstance(items["item"], list) else [items["item"]]
 
     return {"code": "SU", "message": results}
-
-print(fetch_exhibition_data(get_coordinates('서울특별시 성동구'), "2025.02.21."))

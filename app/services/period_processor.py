@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 def is_free_time_in_period(free_time: str, period: str) -> bool:
     """
     free_time은 "YYYY.MM.DD."의 단일 날짜가 주어집니다.
@@ -19,7 +20,8 @@ def is_free_time_in_period(free_time: str, period: str) -> bool:
     except Exception:
         # period 형식이 올바르지 않으면 False 반환
         return False
-    
+
+
 def convert_to_period_format(start_date:str, end_date:str) -> str:
     """
     start_date와 end_date는 "YYYYMMDD"의 형식으로 주어집니다.
