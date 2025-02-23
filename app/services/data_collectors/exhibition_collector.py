@@ -32,8 +32,8 @@ def fetch_exhibition_data(coordinates, free_time):
     API_KEY = os.getenv("EXHIBITION_API_KEY", "YOUR_TEST_API_KEY")
 
     y, x = coordinates
-    y_margin = 0.07
-    x_margin = 0.08
+    y_margin = 0.05
+    x_margin = 0.05
 
     # 날짜 변환 (YYYY.MM.DD. → YYYYMMDD)
     start_date, end_date = get_start_and_end_date(free_time)
