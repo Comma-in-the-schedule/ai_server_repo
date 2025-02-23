@@ -74,7 +74,7 @@ def process_exhibition(location, free_time):
         title = item.get("title")
         place = item.get("place")
         address = get_address(place)
-        period = f'{item.get('startDate')}-{item.get('endDate')}'
+        period = f'{item.get("startDate")}-{item.get("endDate")}'
         image = item.get("thumbnail", "")
 
         # snippet 가져오기
@@ -101,31 +101,6 @@ def process_exhibition(location, free_time):
         full_data["image"] = image
 
         event_list.append(full_data)
-
-    # event_list =[
-    #     {
-    #         "address": "서울특별시 강남구 OO로",
-    #         "category": "전시회",
-    #         "description": "더미 데이터 설명",
-    #         "image": "",
-    #         "opening_time": "00:00 - 00:00",
-    #         "period": "0000.00.00.-0000.00.00.",
-    #         "place": "장소",
-    #         "title": "더미데이터입니다.",
-    #         "url": "http://www.example.co.kr/"
-    #     },
-    #     {
-    #         "address": "서울특별시 종로구 OO로",
-    #         "category": "전시회",
-    #         "description": "더미 데이터 설명2",
-    #         "image": "",
-    #         "opening_time": "11:11-11:11",
-    #         "period": "1111.11.11-1111.11.11.",
-    #         "place": "장소2",
-    #         "title": "더미데이터입니다.2",
-    #         "url": "http://www.example2.co.kr/"
-    #     }
-    # ]
 
     return {"code": "SU", "message": "Success.", "result": event_list}
 
