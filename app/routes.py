@@ -100,7 +100,8 @@ def process_exhibition(location, free_time):
         # image url을 추가
         full_data["image"] = image
 
-        event_list.append(full_data)
+        if is_free_time_in_period(free_time, full_data['period']):
+            event_list.append(full_data)
 
     return {"code": "SU", "message": "Success.", "result": event_list}
 
