@@ -2,11 +2,13 @@ import os
 import json
 from openai import OpenAI
 
+
 # OpenAI API 키 환경 변수 로드
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
 # OpenAI API 클라이언트 초기화
 client = OpenAI(api_key=openai_api_key)
+
 
 def generate_description(category:str, title:str, place:str, address:str, period:str, opening_time:str, url:str, snippets:list) -> dict:
     """

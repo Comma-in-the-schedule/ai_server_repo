@@ -2,6 +2,7 @@ from flask import Flask
 from dotenv import load_dotenv
 import os
 
+
 def create_app():
     # .env 파일 로드
     load_dotenv()
@@ -23,4 +24,3 @@ def create_app():
     app.register_blueprint(api_bp)
 
     return app
-

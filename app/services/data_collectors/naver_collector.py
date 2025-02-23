@@ -2,17 +2,17 @@ import requests
 import os
 import re
 
-import dotenv
 
-dotenv.load_dotenv('config.env')
 # 환경 변수에서 네이버 API 키 불러오기
 NAVER_CLIENT_ID = os.getenv("NAVER_CLIENT_ID")
 NAVER_CLIENT_SECRET = os.getenv("NAVER_CLIENT_SECRET")
+
 
 def clean_html_tags(text):
     """HTML 태그 제거 함수"""
     clean = re.compile('<.*?>')  # HTML 태그를 찾는 정규식
     return re.sub(clean, '', text)
+
 
 def collect_data(location, category):
     """
