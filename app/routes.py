@@ -101,7 +101,7 @@ def process_exhibition(location, free_time):
         if full_data["period"]:
             full_data["period"] = convert_to_period_format(full_data["period"].split('-')[0], full_data["period"].split('-')[1])
 
-        # image url을 추가
+        # image url 추가
         full_data["image"] = image
 
         if is_free_time_in_period(free_time, full_data['period']):
