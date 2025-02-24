@@ -8,7 +8,8 @@ from dateutil.relativedelta import relativedelta
 def get_coordinates(location):
     API_KEY = os.getenv("KAKAO_API_KEY")
     url = "https://dapi.kakao.com/v2/local/search/address.json"
-    headers = {"Authorization": f"KakaoAK {API_KEY}"}
+    # headers = {"Authorization": f"KakaoAK {API_KEY}"}
+    headers = {"Authorization": f"{API_KEY}"}
     params = {"query": location}
 
     response = requests.get(url, headers=headers, params=params)
