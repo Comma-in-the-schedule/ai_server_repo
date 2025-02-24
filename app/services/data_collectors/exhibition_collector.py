@@ -53,7 +53,10 @@ def fetch_exhibition_data(coordinates, free_time):
         "gpsyto": y + y_margin
     }
 
-    response = requests.get(API_URL, params=params)
+    try:
+        response = requests.get(API_URL, params=params)
+    except requests.exceptions.SSLError as e:
+        return {"code": "SSL", "message": f"SSL ERROR"}
     if response.status_code != 200:
         return {"code": "API_ERROR", "message": f"문화포털 API 요청 실패 (HTTP {response.status_code})"}
 

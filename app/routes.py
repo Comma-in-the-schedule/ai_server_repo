@@ -65,7 +65,7 @@ def process_exhibition(location, free_time):
     result = fetch_exhibition_data(get_coordinates(location), free_time)
 
     if result["code"] != "SU":
-        return jsonify(result)
+        return result
     else:
         collected_data = result["message"]
 
