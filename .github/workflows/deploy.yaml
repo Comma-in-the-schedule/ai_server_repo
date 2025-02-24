@@ -59,6 +59,8 @@ jobs:
               -e NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }} \
               -e NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }} \
               -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
+              -e KAKAO_API_KEY=${{ secrets.KAKAO_API_KEY }} \
+              -e EXHIBITION_API_KEY=${{ secrets.EXHIBITION_API_KEY }} \
             ${{ secrets.DOCKER_USERNAME }}/comma-ai:latest
         
             docker image prune -a -f
