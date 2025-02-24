@@ -62,7 +62,11 @@ def process_exhibition(location, free_time):
     """
     사용자의 지역(location)과 여가 시간(free_time)에 맞는 전시회 데이터를 가져와 가공하는 함수.
     """
-    result = fetch_exhibition_data(get_coordinates(location), free_time)
+    coordinates = get_coordinates(location)
+    if coordinates["code"] != "SU":
+        return coordinates
+
+    result = fetch_exhibition_data(coordinates["message"], free_time)
 
     if result["code"] != "SU":
         return result
