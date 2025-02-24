@@ -15,9 +15,11 @@ def get_coordinates(location):
     data = response.json()
     
     if response.status_code != 200:
-        return {"code": "API_ERROR", "message": f"카카오 API 요청 실패 (HTTP {response.status_code})"}
+        return {"code": "API_ERROR", "message": f"카카오 API 요청 실패 (HTTP {response.text})"}
 
-    return [float(data['documents'][0]['y']), float(data['documents'][0]['x'])]
+    result = [float(data['documents'][0]['y']), float(data['documents'][0]['x'])]
+
+    return {"code": "SU", "message": result}
 
 
 def get_start_and_end_date(free_time):
@@ -56,10 +58,10 @@ def fetch_exhibition_data(coordinates, free_time):
     try:
         response = requests.get(API_URL, params=params)
     except requests.exceptions.SSLError as e:
-        return {"code": "SSL", "message": f"SSL ERROR"}
+        return {"code": "SSL ERROR", "message": "SSL 인증 실패"}
     if response.status_code != 200:
         return {"code": "API_ERROR", "message": f"문화포털 API 요청 실패 (HTTP {response.status_code})"}
-
+    
     try:
         data_dict = xmltodict.parse(response.text)
     except Exception as e:
