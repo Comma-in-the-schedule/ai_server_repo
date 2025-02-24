@@ -47,7 +47,7 @@ def process_popupstore(location, free_time):
 
         if full_data["period"]:
             full_data["period"] = convert_to_period_format(full_data["period"].split('-')[0], full_data["period"].split('-')[1])
-        # 이미지 url 추가(추후 기능 구현)
+        
         full_data["image"] = ""
 
         # 운영 기간이 여가 시간에 포함될 경우, 운영 기간 데이터가 없을 경우에만 추가
