@@ -14,6 +14,9 @@ def get_coordinates(location):
     response = requests.get(url, headers=headers, params=params)
     data = response.json()
     
+    if response.status_code != 200:
+        return {"code": "API_ERROR", "message": f"카카오 API 요청 실패 (HTTP {response.status_code})"}
+
     return [float(data['documents'][0]['y']), float(data['documents'][0]['x'])]
 
 
